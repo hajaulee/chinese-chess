@@ -1,0 +1,130 @@
+<div class="game-board">
+  <div class="game-row">
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell">
+      <div class="diagonal-line"></div>
+    </div>
+    <div class="game-cell">
+      <div class="back-diagonal-line"></div>
+    </div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+  </div>
+  <div class="game-row">
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell">
+      <div class="back-diagonal-line"></div>
+    </div>
+    <div class="game-cell">
+      <div class="diagonal-line"></div>
+    </div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+  </div>
+  <div class="game-row">
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+  </div>
+  <div class="game-row">
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+  </div>
+  <div class="game-row game-river">
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+  </div>
+  <div class="game-row">
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+  </div>
+  <div class="game-row">
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+  </div>
+  <div class="game-row">
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell">
+      <div class="diagonal-line"></div>
+    </div>
+    <div class="game-cell">
+      <div class="back-diagonal-line"></div>
+    </div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+  </div>
+  <div class="game-row">
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell">
+      <div class="back-diagonal-line"></div>
+    </div>
+    <div class="game-cell">
+      <div class="diagonal-line"></div>
+    </div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+    <div class="game-cell"></div>
+  </div>
+  <ng-container *ngFor="let row of gameEngine.board;index as rowIndex">
+    <ng-container *ngFor="let chessMan of row;index as colIndex">
+      <div
+           (click)="chessManClick(rowIndex, colIndex, chessMan)"
+           class="chess-man"
+           [ngClass]="{
+           'chess-man': chessMan,
+           'empty-chess-man': !chessMan,
+           'red-chess-man': chessMan?.color == gameTurn.RED,
+           'black-chess-man': chessMan?.color == gameTurn.BLACK,
+           'clicked-chess-man': colIndex == clickedChessMan?.colIndex && rowIndex == clickedChessMan?.rowIndex
+           }"
+           [ngStyle]="{left: (-5 + 12.5 * colIndex) + '%', top: (-5 + 11.11 * rowIndex) + '%'}">
+        {{chessMan?.label}}
+      </div>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngFor="let position of nextPositionHints">
+    <div class="able-position"
+         [ngStyle]="{left: (-1 + 12.5 * position.x) + '%', top: (-1 + 11.11 * position.y) + '%'}">
+    </div>
+  </ng-container>
+</div>
