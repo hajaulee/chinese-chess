@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {ChessMan, ChessManPosition, GameEngine, GameTurn} from "../../library/game-engine";
-import { isEqual } from "lodash";
+import {Component, OnInit} from '@angular/core';
+import {isEqual} from "lodash";
+import {ChessMan, ChessManPosition, ChessMove, ChineseChessGameEngine} from "../../library/chinese-chess-game-engine";
+import {GameTurn} from "../../library/game-turn";
+import {ChineseChessEvaluator} from "../../library/chinese-chess-evaluator";
+import {GameAi} from "../../library/game-ai";
 
 export interface ClickedChessMan {
   rowIndex: number;
@@ -18,40 +21,71 @@ export class GameBoardComponent implements OnInit {
   // Constants
   gameTurn = GameTurn;
 
-  gameEngine!: GameEngine;
+  gameEngine!: ChineseChessGameEngine;
+  gameEvaluator!: ChineseChessEvaluator;
+  gameAi!: GameAi<ChineseChessGameEngine, ChessMove>;
   clickedChessMan?: ClickedChessMan = undefined;
-  nextPositionHints: Array<ChessManPosition> = []
+  nextPositionHints: Array<ChessManPosition> = [];
 
-  constructor() { }
+  maxDepth = 4;
+
+  constructor() {
+  }
 
   ngOnInit(): void {
-    this.gameEngine = new GameEngine(GameTurn.RED);
+    this.initGame();
+  }
+
+  initGame(){
+    this.gameEngine = new ChineseChessGameEngine(GameTurn.RED);
+    this.gameEvaluator = new ChineseChessEvaluator();
+    this.gameAi = new GameAi(this.gameEngine, this.gameEvaluator, this.maxDepth);
   }
 
 
-  drawGameBoard(){
-
-  }
-
-  chessManClick(rowIndex: number, colIndex: number, chessMan?: ChessMan | null){
-    if (this.clickedChessMan){
+  chessManClick(rowIndex: number, colIndex: number, chessMan?: ChessMan | null) {
+    if (!this.clickedChessMan) {
+      this.setClickedChessMan(rowIndex, colIndex, chessMan);
+    } else {
       if (this.isValidNextPosition(colIndex, rowIndex)) {
-        this.gameEngine.move(this.clickedChessMan.colIndex, this.clickedChessMan.rowIndex, colIndex, rowIndex);
-        this.clickedChessMan = undefined;
-        this.nextPositionHints = [];
-      } else if (chessMan){
-        this.clickedChessMan = undefined;
-        this.chessManClick(rowIndex, colIndex, chessMan);
-      }
-    }else{
-      if (chessMan){
-        this.clickedChessMan = {rowIndex , colIndex, chessMan};
-        this.nextPositionHints = this.gameEngine.ableNextPosition(colIndex, rowIndex);
+        this.humanMove(rowIndex, colIndex);
+        setTimeout(() => this.aiMove());
+      } else if (chessMan) {
+        this.setClickedChessMan(rowIndex, colIndex, chessMan);
       }
     }
   }
 
+  humanMove(rowIndex: number, colIndex: number){
+    this.gameEngine.move({
+      from: {x: this.clickedChessMan!.colIndex, y: this.clickedChessMan!.rowIndex},
+      to: {x: colIndex, y: rowIndex}
+    });
+    this.clickedChessMan = undefined;
+    this.nextPositionHints = [];
+  }
+
+  aiMove() {
+    const aiMove = this.gameAi.infer();
+    if (aiMove){
+      this.gameEngine.move(aiMove);
+    }else{
+      alert("No move");
+    }
+  }
+
+  setClickedChessMan(rowIndex: number, colIndex: number, chessMan?: ChessMan | null) {
+    if (chessMan && chessMan.color == GameTurn.RED) {
+      this.clickedChessMan = {rowIndex, colIndex, chessMan};
+      this.nextPositionHints = this.gameEngine.ableNextPositions(colIndex, rowIndex);
+    }
+  }
+
   isValidNextPosition(x: number, y: number): boolean {
-    return this.nextPositionHints.some(it => isEqual(it, {x, y}))
+    return this.nextPositionHints.some(it => it.x == x && it.y == y)
+  }
+
+  undo(){
+    this.gameEngine.undo()
   }
 }

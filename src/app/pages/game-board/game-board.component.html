@@ -112,7 +112,7 @@
            class="chess-man"
            [ngClass]="{
            'chess-man': chessMan,
-           'empty-chess-man': !chessMan,
+           'empty-chess-man': !chessMan && clickedChessMan,
            'red-chess-man': chessMan?.color == gameTurn.RED,
            'black-chess-man': chessMan?.color == gameTurn.BLACK,
            'clicked-chess-man': colIndex == clickedChessMan?.colIndex && rowIndex == clickedChessMan?.rowIndex
@@ -127,4 +127,12 @@
          [ngStyle]="{left: (-1 + 12.5 * position.x) + '%', top: (-1 + 11.11 * position.y) + '%'}">
     </div>
   </ng-container>
+</div>
+
+<div class="action-bar">
+  <div>
+    <input type="number" [(ngModel)]="maxDepth" placeholder="Depth"/>
+    <button style="margin-left: 1em" (click)="initGame()">Reset</button>
+  </div>
+  <button (click)="undo()">Undo</button>
 </div>

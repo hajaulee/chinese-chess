@@ -2,7 +2,7 @@
   position: relative;
   max-width: 80vw;
   border: solid 1px black;
-  max-height: 80vh;
+  max-height: 60vh;
   aspect-ratio: 1 / 1;
   margin: 3em auto auto;
 
@@ -94,4 +94,12 @@
     background: red;
     pointer-events: none;
   }
+}
+
+.action-bar {
+  max-width: 80vw;
+  width: 30em;
+  margin: 2em auto auto;
+  display: flex;
+  justify-content: space-between;
 }
