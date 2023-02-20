@@ -191,8 +191,8 @@ export class ChineseChessGameEngine implements GameEngine {
 
   ableMoves(): Array<ChessMove> {
     const moves = [];
-    for (let y = 0; y < this.maxY; y++){
-      for (let x = 0; x < this.maxX; x++){
+    for (let y = 0; y <= this.maxY; y++){
+      for (let x = 0; x <= this.maxX; x++){
         if (this.board[y][x]?.color == this.gameTurn){
           moves.push(...this.ableNextPositions(x, y).map(position => ({
             from: {x, y},

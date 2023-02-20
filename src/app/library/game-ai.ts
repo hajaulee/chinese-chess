@@ -8,7 +8,6 @@ export class GameAi<GenericGame extends GameEngine, GenericMove extends GameMove
 
   infer(): GenericMove | null {
     const bestMove = this.minimax(this.gameEngine, null, 0 , false, -Infinity, Infinity);
-    console.log("best move:", bestMove.move, bestMove.value)
     return bestMove.move as GenericMove;
   }
 
