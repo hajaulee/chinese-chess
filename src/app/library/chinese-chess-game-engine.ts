@@ -319,10 +319,18 @@ export class ChineseChessGameEngine implements GameEngine {
     const leftDownPos = {x: x - 2, y: y - 2}
     const rightUpPos = {x: x + 2, y: y + 2}
     const rightDownPos = {x: x + 2, y: y - 2};
-    this.addValidPos(positions, chessMan, leftUpPos);
-    this.addValidPos(positions, chessMan, leftDownPos);
-    this.addValidPos(positions, chessMan, rightUpPos);
-    this.addValidPos(positions, chessMan, rightDownPos);
+    if (!this.getChessMan({x: x - 1, y: y + 1})) {
+      this.addValidPos(positions, chessMan, leftUpPos);
+    }
+    if (!this.getChessMan({x: x - 1, y: y - 1})) {
+      this.addValidPos(positions, chessMan, leftDownPos);
+    }
+    if (!this.getChessMan({x: x + 1, y: y + 1})) {
+      this.addValidPos(positions, chessMan, rightUpPos);
+    }
+    if (!this.getChessMan({x: x + 1, y: y - 1})) {
+      this.addValidPos(positions, chessMan, rightDownPos);
+    }
     return positions
   }
 
